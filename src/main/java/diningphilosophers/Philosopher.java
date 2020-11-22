@@ -26,7 +26,7 @@ public class Philosopher
             try {
                 think();
                 myLeftStick.take();
-                think(); // Pour augmenter la probabilité d'interblocage
+                // think(); // Pour augmenter la probabilité d'interblocage
                 myRightStick.take();
                 // success : process
                 eat();
