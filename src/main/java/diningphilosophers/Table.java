@@ -5,23 +5,18 @@ import java.io.IOException;
 public class Table {
 
     public static void main(String[] args) {
-        ChopStick s1 = new ChopStick();
-        ChopStick s2 = new ChopStick();
-        ChopStick s3 = new ChopStick();
-        Philosopher rigaud = new Philosopher("Rigaud", s1, s2);
-        Philosopher conchon = new Philosopher("Conchon", s2, s3);
-        Philosopher bastide = new Philosopher("Bastide", s3, s1);
-        rigaud.start();
-        conchon.start();
-        bastide.start();
-	// Attendre une touche au clavier
+        ChopStick baguette1 = new ChopStick();
+        ChopStick baguette2 = new ChopStick();
+        ChopStick baguette3 = new ChopStick();
+        Philosopher sb = new Philosopher("Barreau", baguette1, baguette2); sb.start();
+        Philosopher ac = new Philosopher("Combes", baguette2, baguette3); ac.start();
+        Philosopher rb = new Philosopher("Bastide", baguette3, baguette1); rb.start();
+        // Arrêter le programme lors d'une touche au clavier
         try {
             System.in.read();
-        } catch (IOException ex) {
-        }
-
-        rigaud.leaveTable();
-        conchon.leaveTable();
-        bastide.leaveTable();
+        } catch (IOException ex) {}
+        sb.leaveTable();
+        ac.leaveTable();
+        rb.leaveTable();
     }
 }

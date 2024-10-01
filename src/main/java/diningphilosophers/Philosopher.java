@@ -4,12 +4,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Philosopher
-        extends Thread {
-
-    private static int seed = 1;
-    private final Random myRandom = new Random(System.currentTimeMillis() + seed++);
-    private final static int DELAY = 1000;
+public class Philosopher extends Thread {
+    private final static int delai = 1000;
     private final ChopStick myLeftStick;
     private final ChopStick myRightStick;
     private boolean running = true;
@@ -20,17 +16,38 @@ public class Philosopher
         myRightStick = right;
     }
 
+    private void think() throws InterruptedException {
+        System.out.println("M."+this.getName()+" pense... ");
+        sleep(delai+new Random().nextInt(delai+1));
+        System.out.println("M."+this.getName()+" arrête de penser");
+    }
+
+    private void eat() throws InterruptedException {
+        System.out.println("M."+this.getName() + " mange...");
+        sleep(delai+new Random().nextInt(delai+1));
+        //System.out.println("M."+this.getName()+" arrête de manger");
+    }
+
     @Override
     public void run() {
         while (running) {
             try {
                 think();
-                myLeftStick.take();
-                // think(); // Pour augmenter la probabilité d'interblocage
-                myRightStick.take();
-                // success : process
+                // Aléatoirement prendre la baguette de gauche puis de droite ou l'inverse
+                switch(new Random().nextInt(2)) {
+                    case 0:
+                        myLeftStick.take();
+                        think(); // pour augmenter la probabilité d'interblocage
+                        myRightStick.take();
+                        break;
+                    case 1:
+                        myRightStick.take();
+                        think(); // pour augmenter la probabilité d'interblocage
+                        myLeftStick.take();
+                }
+                // Si on arrive ici, on a pu "take" les 2 baguettes
                 eat();
-                // release resources
+                // On libère les baguettes :
                 myLeftStick.release();
                 myRightStick.release();
                 // try again
@@ -46,17 +63,4 @@ public class Philosopher
         running = false;
     }
 
-    private void think() throws InterruptedException {
-        int delay = myRandom.nextInt(500 + DELAY);
-        System.out.println(this.getName() + " Starts Thinking for: " + delay + " ms");
-        sleep(delay); // Le thread peut être interrompu ici
-        System.out.println(this.getName() + " Stops Thinking");
-    }
-
-    private void eat() throws InterruptedException {
-        int delay = myRandom.nextInt(100 + DELAY);
-        System.out.println(this.getName() + " Starts Eating for:" + delay + " ms");
-        sleep(delay); // Le thread peut être interrompu ici
-        System.out.println(this.getName() + " Stops Eating");
-    }
 }
