@@ -1,2 +1,1 @@
-# plonge-correction
-multithread plonge - correction verrouillage à 2 phases
+multithread table des philosophes - correction verrouillage à 2 phases
