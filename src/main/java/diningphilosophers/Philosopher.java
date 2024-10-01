@@ -23,7 +23,7 @@ public class Philosopher extends Thread {
     }
 
     private void eat() throws InterruptedException {
-        System.out.println("M."+this.getName() + " mange...");
+        System.out.println("M."+this.getName() + " MANGE...");
         sleep(delai+new Random().nextInt(delai+1));
         //System.out.println("M."+this.getName()+" arrête de manger");
     }
@@ -34,26 +34,29 @@ public class Philosopher extends Thread {
             try {
                 think();
                 // Aléatoirement prendre la baguette de gauche puis de droite ou l'inverse
+                boolean gauche=false;
+                boolean droite=false;
                 switch(new Random().nextInt(2)) {
                     case 0:
-                        myLeftStick.take();
+                        gauche = myLeftStick.take();
                         think(); // pour augmenter la probabilité d'interblocage
-                        myRightStick.take();
+                        droite = myRightStick.take();
                         break;
                     case 1:
-                        myRightStick.take();
+                        droite = myRightStick.take();
                         think(); // pour augmenter la probabilité d'interblocage
-                        myLeftStick.take();
+                        gauche = myLeftStick.take();
                 }
-                // Si on arrive ici, on a pu "take" les 2 baguettes
+                if (gauche && droite) { // Si on arrive ici, on a pu "take" les 2 baguettes
                 eat();
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger("Table").log(Level.SEVERE, "{0} Interrupted", this.getName());
+            } finally {
                 // On libère les baguettes :
                 myLeftStick.release();
                 myRightStick.release();
-                // try again
-            } catch (InterruptedException ex) {
-                Logger.getLogger("Table").log(Level.SEVERE, "{0} Interrupted", this.getName());
-            }
+            } 
         }
     }
 
